@@ -29,10 +29,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/ar-food-experience.git"
+    "url": "https://github.com/WallanDavid/vr_ar.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/ar-food-experience/issues"
+    "url": "https://github.com/WallanDavid/vr_ar/issues"
   },
-  "homepage": "https://your-username.github.io/ar-food-experience"
+  "homepage": "https://wallandavid.github.io/vr_ar"
 } 
