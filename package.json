@@ -1,0 +1,37 @@
+{
+  "name": "ar-food-experience",
+  "version": "1.0.0",
+  "description": "Portfólio interativo de Realidade Aumentada para restaurantes com cardápios digitais",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve . -p 3000",
+    "dev": "npx live-server --port=3000 --open=/",
+    "build": "echo 'Build completed - static files ready'",
+    "preview": "npx serve dist -p 3000"
+  },
+  "keywords": [
+    "ar",
+    "augmented-reality",
+    "restaurant",
+    "food",
+    "portfolio",
+    "3d",
+    "interactive",
+    "qr-code",
+    "digital-menu"
+  ],
+  "author": "AR Food Experience Team",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "serve": "^14.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/ar-food-experience.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/ar-food-experience/issues"
+  },
+  "homepage": "https://your-username.github.io/ar-food-experience"
+} 

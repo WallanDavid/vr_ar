@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demonstração AR - AR Food Experience</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .demo-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .demo-header h1 {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+        
+        .demo-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .demo-step {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .demo-step:hover {
+            transform: translateY(-5px);
+        }
+        
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .demo-step h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+        
+        .demo-step p {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+        
+        .interactive-demo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 3rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .interactive-demo h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .demo-phone {
+            width: 300px;
+            height: 600px;
+            background: #1a1a1a;
+            border-radius: 30px;
+            padding: 20px;
+            margin: 0 auto 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .demo-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .demo-menu {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+        }
+        
+        .menu-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .menu-header h3 {
+            color: #333;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .menu-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .menu-items {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .menu-item {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .menu-item.selected {
+            border: 2px solid #2563eb;
+            background: #f0f9ff;
+        }
+        
+        .item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .item-info {
+            flex: 1;
+        }
+        
+        .item-info h4 {
+            color: #333;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .item-info p {
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .item-price {
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .ar-view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .ar-view.active {
+            display: flex;
+        }
+        
+        .ar-model-large {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .ar-controls-large {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .control-btn-large {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .control-btn-large:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .close-ar {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .demo-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .demo-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .demo-btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .demo-btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+        
+        .demo-btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .demo-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .features-highlight {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .features-highlight h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #1f2937;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-item {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: #f8fafc;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .feature-item h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+        
+        .feature-item p {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-phone {
+                width: 250px;
+                height: 500px;
+            }
+            
+            .demo-steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>Demonstração Interativa</h1>
+            <p>Experimente como seria a experiência real do cliente no restaurante</p>
+        </div>
+
+        <div class="demo-steps">
+            <div class="demo-step">
+                <div class="step-icon">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <h3>1. Escaneie o QR Code</h3>
+                <p>O cliente aponta a câmera do celular para o QR code na mesa do restaurante</p>
+            </div>
+            <div class="demo-step">
+                <div class="step-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>2. Acesse o Cardápio</h3>
+                <p>O cardápio digital abre automaticamente com todos os pratos disponíveis</p>
+            </div>
+            <div class="demo-step">
+                <div class="step-icon">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <h3>3. Visualize em AR</h3>
+                <p>Escolha um prato e veja uma projeção 3D realista na mesa</p>
+            </div>
+        </div>
+
+        <div class="interactive-demo">
+            <h2>Simule a Experiência</h2>
+            <div class="demo-phone">
+                <div class="demo-screen">
+                    <div class="demo-menu" id="demoMenu">
+                        <div class="menu-header">
+                            <h3>Cardápio Digital</h3>
+                            <p>Escolha um prato para visualizar em AR</p>
+                        </div>
+                        <div class="menu-items">
+                            <div class="menu-item" data-dish="hamburger">
+                                <div class="item-image">
+                                    <i class="fas fa-hamburger"></i>
+                                </div>
+                                <div class="item-info">
+                                    <h4>Hambúrguer Gourmet</h4>
+                                    <p>Carne artesanal, queijo, vegetais frescos</p>
+                                    <div class="item-price">R$ 28,90</div>
+                                </div>
+                            </div>
+                            <div class="menu-item" data-dish="pasta">
+                                <div class="item-image">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <div class="item-info">
+                                    <h4>Massas Artesanais</h4>
+                                    <p>Massa fresca, molho caseiro, ervas</p>
+                                    <div class="item-price">R$ 32,50</div>
+                                </div>
+                            </div>
+                            <div class="menu-item" data-dish="dessert">
+                                <div class="item-image">
+                                    <i class="fas fa-birthday-cake"></i>
+                                </div>
+                                <div class="item-info">
+                                    <h4>Sobremesa Gourmet</h4>
+                                    <p>Chocolate belga, frutas frescas</p>
+                                    <div class="item-price">R$ 18,90</div>
+                                </div>
+                            </div>
+                            <div class="menu-item" data-dish="sushi">
+                                <div class="item-image">
+                                    <i class="fas fa-fish"></i>
+                                </div>
+                                <div class="item-info">
+                                    <h4>Combinado Sushi</h4>
+                                    <p>Peixe fresco, arroz especial</p>
+                                    <div class="item-price">R$ 45,00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ar-view" id="arView">
+                        <button class="close-ar" onclick="closeAR()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <div class="ar-model-large" id="arModelLarge">
+                            <!-- Modelo 3D será inserido aqui -->
+                        </div>
+                        <div class="ar-controls-large">
+                            <button class="control-btn-large" onclick="rotateModel()">
+                                <i class="fas fa-rotate"></i>
+                            </button>
+                            <button class="control-btn-large" onclick="zoomModel()">
+                                <i class="fas fa-search-plus"></i>
+                            </button>
+                            <button class="control-btn-large" onclick="interactModel()">
+                                <i class="fas fa-hand-pointer"></i>
+                            </button>
+                        </div>
+                        <h3 id="arDishName">Visualização AR</h3>
+                        <p>Use os controles para interagir com o modelo 3D</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="demo-actions">
+                <button class="demo-btn demo-btn-primary" onclick="startDemo()">
+                    <i class="fas fa-play"></i> Iniciar Demonstração
+                </button>
+                <a href="index.html" class="demo-btn demo-btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Voltar ao Portfólio
+                </a>
+            </div>
+        </div>
+
+        <div class="features-highlight">
+            <h2>Recursos da Solução</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Visualização Realista</h3>
+                    <p>Modelos 3D detalhados com texturas e iluminação realistas</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-hand-pointer"></i>
+                    </div>
+                    <h3>Interação Intuitiva</h3>
+                    <p>Controles simples para rotacionar, aproximar e explorar</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Responsivo</h3>
+                    <p>Funciona perfeitamente em qualquer dispositivo móvel</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Carregamento Rápido</h3>
+                    <p>Modelos otimizados para carregamento instantâneo</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let currentDish = null;
+        let isARActive = false;
+
+        // Função para iniciar demonstração
+        function startDemo() {
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    selectDish(this);
+                });
+            });
+            
+            // Adicionar animação de entrada
+            document.querySelector('.demo-phone').style.animation = 'fadeInUp 1s ease';
+        }
+
+        // Função para selecionar prato
+        function selectDish(menuItem) {
+            // Remover seleção anterior
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Adicionar seleção atual
+            menuItem.classList.add('selected');
+            
+            // Obter dados do prato
+            const dishType = menuItem.getAttribute('data-dish');
+            const dishName = menuItem.querySelector('h4').textContent;
+            
+            currentDish = {
+                type: dishType,
+                name: dishName
+            };
+            
+            // Mostrar AR view após delay
+            setTimeout(() => {
+                showARView(dishType, dishName);
+            }, 1000);
+        }
+
+        // Função para mostrar visualização AR
+        function showARView(dishType, dishName) {
+            const arView = document.getElementById('arView');
+            const arModelLarge = document.getElementById('arModelLarge');
+            const arDishName = document.getElementById('arDishName');
+            
+            // Configurar modelo baseado no tipo
+            arModelLarge.innerHTML = createModel3D(dishType);
+            arDishName.textContent = dishName;
+            
+            // Mostrar AR view
+            arView.classList.add('active');
+            isARActive = true;
+            
+            // Adicionar animação de entrada
+            arModelLarge.style.animation = 'fadeInUp 0.8s ease';
+        }
+
+        // Função para criar modelo 3D
+        function createModel3D(dishType) {
+            const models = {
+                hamburger: `
+                    <div class="model-3d hamburger-3d" style="width: 100%; height: 100%; transform-style: preserve-3d; animation: rotate 8s linear infinite;">
+                        <div class="model-layers" style="width: 100%; height: 100%; position: relative; transform-style: preserve-3d;">
+                            <div class="layer bun-top" style="position: absolute; width: 100%; height: 20px; background: #fbbf24; border-radius: 50%; top: 0; transform: translateZ(0px);"></div>
+                            <div class="layer lettuce" style="position: absolute; width: 100%; height: 20px; background: #10b981; border-radius: 50%; top: 20px; transform: translateZ(2px);"></div>
+                            <div class="layer tomato" style="position: absolute; width: 100%; height: 20px; background: #ef4444; border-radius: 50%; top: 40px; transform: translateZ(4px);"></div>
+                            <div class="layer cheese" style="position: absolute; width: 100%; height: 20px; background: #f59e0b; border-radius: 50%; top: 60px; transform: translateZ(6px);"></div>
+                            <div class="layer patty" style="position: absolute; width: 100%; height: 20px; background: #92400e; border-radius: 50%; top: 80px; transform: translateZ(8px);"></div>
+                            <div class="layer bun-bottom" style="position: absolute; width: 100%; height: 20px; background: #fbbf24; border-radius: 50%; top: 100px; transform: translateZ(10px);"></div>
+                        </div>
+                    </div>
+                `,
+                pasta: `
+                    <div class="model-3d pasta-3d" style="width: 100%; height: 100%; transform-style: preserve-3d; animation: float 4s ease-in-out infinite;">
+                        <div class="pasta-dish" style="width: 100%; height: 100%; position: relative;">
+                            <div class="pasta-strands" style="width: 80px; height: 80px; background: linear-gradient(45deg, #fbbf24, #f59e0b); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);"></div>
+                            <div class="sauce-drops" style="position: absolute; width: 8px; height: 8px; background: #dc2626; border-radius: 50%; top: 30%; left: 30%; animation: drop 2s ease-in-out infinite;"></div>
+                            <div class="herbs-garnish" style="position: absolute; width: 6px; height: 6px; background: #059669; border-radius: 50%; top: 20%; right: 25%; animation: drop 2.5s ease-in-out infinite;"></div>
+                        </div>
+                    </div>
+                `,
+                dessert: `
+                    <div class="model-3d dessert-3d" style="width: 100%; height: 100%; transform-style: preserve-3d; animation: rotate 6s linear infinite;">
+                        <div class="dessert-layers" style="width: 100%; height: 100%; position: relative; transform-style: preserve-3d;">
+                            <div class="layer base" style="position: absolute; width: 100%; height: 25px; background: #92400e; border-radius: 50%; top: 0; transform: translateZ(0px);"></div>
+                            <div class="layer cream" style="position: absolute; width: 100%; height: 25px; background: #fef3c7; border-radius: 50%; top: 25px; transform: translateZ(3px);"></div>
+                            <div class="layer fruit" style="position: absolute; width: 100%; height: 25px; background: #ec4899; border-radius: 50%; top: 50px; transform: translateZ(6px);"></div>
+                            <div class="layer decoration" style="position: absolute; width: 100%; height: 25px; background: #fbbf24; border-radius: 50%; top: 75px; transform: translateZ(9px);"></div>
+                        </div>
+                    </div>
+                `,
+                sushi: `
+                    <div class="model-3d sushi-3d" style="width: 100%; height: 100%; transform-style: preserve-3d; animation: float 3.5s ease-in-out infinite;">
+                        <div class="sushi-plate" style="width: 100%; height: 100%; position: relative;">
+                            <div class="sushi-piece nigiri" style="position: absolute; width: 30px; height: 20px; background: linear-gradient(45deg, #fbbf24, #f59e0b); border-radius: 8px; top: 30%; left: 20%; transform: translateZ(2px);"></div>
+                            <div class="sushi-piece maki" style="position: absolute; width: 30px; height: 20px; background: linear-gradient(45deg, #10b981, #059669); border-radius: 8px; top: 50%; left: 50%; transform: translate(-50%, -50%) translateZ(4px);"></div>
+                            <div class="sushi-piece sashimi" style="position: absolute; width: 30px; height: 20px; background: linear-gradient(45deg, #3b82f6, #1d4ed8); border-radius: 8px; top: 70%; right: 20%; transform: translateZ(6px);"></div>
+                            <div class="garnish wasabi" style="position: absolute; width: 8px; height: 8px; background: #10b981; border-radius: 50%; top: 40%; right: 30%; animation: pulse 2s ease-in-out infinite;"></div>
+                        </div>
+                    </div>
+                `
+            };
+            
+            return models[dishType] || models.hamburger;
+        }
+
+        // Funções de controle AR
+        function rotateModel() {
+            const model = document.querySelector('.ar-model-large .model-3d');
+            if (model) {
+                model.style.animation = 'rotate 2s linear infinite';
+                setTimeout(() => {
+                    model.style.animation = '';
+                }, 2000);
+            }
+        }
+
+        function zoomModel() {
+            const model = document.querySelector('.ar-model-large .model-3d');
+            if (model) {
+                model.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    model.style.transform = 'scale(1)';
+                }, 1000);
+            }
+        }
+
+        function interactModel() {
+            const model = document.querySelector('.ar-model-large .model-3d');
+            if (model) {
+                model.style.animation = 'float 1s ease-in-out infinite';
+                setTimeout(() => {
+                    model.style.animation = '';
+                }, 1000);
+            }
+        }
+
+        function closeAR() {
+            const arView = document.getElementById('arView');
+            arView.classList.remove('active');
+            isARActive = false;
+            
+            // Limpar seleção
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+        }
+
+        // Inicializar demonstração quando a página carrega
+        document.addEventListener('DOMContentLoaded', function() {
+            startDemo();
+        });
+    </script>
+</body>
+</html> 
